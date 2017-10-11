@@ -56,9 +56,10 @@ public class HomeController {
         String auth = httpRequest.getHeader("Authorization");
 
         JsonObject jsonObject = new JsonObject();
-        boolean validUser = isUserAuthenticated(auth);
+        //boolean validUser = getUserId(auth);
 
-        if (validUser) {
+        long valid = getUserId(auth);
+        if (valid!=0) {
             jsonObject.addProperty("message", "you are logged in. current time is " + new Date().toString());
         } else {
             jsonObject.addProperty("message", "you are not authorized!!!");
@@ -67,7 +68,7 @@ public class HomeController {
         return jsonObject.toString();
     }
 
-    private boolean isUserAuthenticated(String authString) {
+    public long getUserId(String authString) {
 
         String decodedAuth = "";
         // Header is in the format "Basic 5tyc0uiDat4"
@@ -90,6 +91,7 @@ public class HomeController {
 
         JsonObject jsonObject = new JsonObject();
         boolean validUser = false;
+        long result=0;
 
         if(userRepository.findAll() == null){
 
@@ -101,6 +103,7 @@ public class HomeController {
             userRepository.save(user);
 
             if (user.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, user.getPassword())) {
+                //result = user.getUserId();
                 validUser = true;
             }
 
@@ -113,6 +116,7 @@ public class HomeController {
                 User user = (User) iterator.next();
 
                 if (user.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, user.getPassword())) {
+                    result = user.getUserId();
                     validUser = true;
                     break;
                 }
@@ -120,7 +124,7 @@ public class HomeController {
         }
 
 
-        return validUser;
+        return result;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")

@@ -1,0 +1,12 @@
+
+[
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "id_rsa"
+  }, 
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.micro"
+  }
+  
+]

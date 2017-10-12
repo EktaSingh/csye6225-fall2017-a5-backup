@@ -2,10 +2,20 @@ AMI="ami-cd0f5cb6"
 INSTANCE_TYPE="t2.micro"
 KEYPAIR_NAME="id_rsa"
 
-aws cloudformation create-stack --stack-name mystack --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json
+#get vpc id
+vpcid=$(aws ec2 describe-vpcs --query "Vpcs[0].VpcId" --output text)
 
-aws ec2 create-security-group --group-name csye6225-fall2017-mystack-webapp --description "my sg" --vpc-id vpc-98886ae0
-SECURITY_ID=$(aws ec2 describe-security-groups --group-names csye6225-fall2017-mystack-webapp | grep "GroupId" | awk '{print$2}' | sed -e 's/^"//' -e 's/"$//')
+#stack name
+echo Enter stack name
+read stackName
+
+#get subnet id for user
+
+
+aws cloudformation create-stack --stack-name $stackName --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid
+
+aws ec2 create-security-group --group-name csye6225-webapp --description "my sg" --vpc-id $vpcid
+SECURITY_ID=$(aws ec2 describe-security-groups --group-names csye6225-webapp | grep "GroupId" | awk '{print$2}' | sed -e 's/^"//' -e 's/"$//')
 echo $SECURITY_ID
 
 aws ec2 authorize-security-group-ingress --group-id $SECURITY_ID --protocol tcp --port 22 --cidr 10.0.2.15/24

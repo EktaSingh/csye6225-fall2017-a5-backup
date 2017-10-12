@@ -1,6 +1,22 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
+	
+	"Parameters" : 
+	{
+	    "VpcId":
+		 {
+	        "Description" : "VpcID",
+      		"Type": "string",
+  		  },
+
+	    "subnetGroupId" :
+		{
+		"Description" : "Subnet group Id to create DB subnet group",
+      		"Type": "string",
+		}
+
+	},
 	"Resources": {
 		"EC2Instance": {
 			"Type": "AWS::EC2::Instance",
@@ -14,33 +30,79 @@
 					]
 				}],
 				"KeyName": "id_rsa"
-			}
+				}
 		},
 		"sgv": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
 				"GroupDescription": "Enable HTTP access via port 80, SSH access via port 22",
-				"VpcId": "vpc-6cb45214",
+				"VpcId": { "Ref" : "VpcId" },
 				"SecurityGroupIngress": [{
 						"IpProtocol": "tcp",
 						"FromPort": "80",
 						"ToPort": "80",
-						"CidrIp": "10.0.2.15/24"
+						"CidrIp": "0.0.0.0"
 					},
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "22",
 						"ToPort": "22",
-						"CidrIp": "10.0.2.15/24"
+						"CidrIp": "0.0.0.0"
 					},
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "443",
 						"ToPort": "443",
-						"CidrIp": "10.0.2.15/24"
+						"CidrIp": "0.0.0.0"
 					}
 				]
 			}
-		}
+		},
+
+		"MyDB" : {
+   			"Type" : "AWS::RDS::DBInstance",
+   			"Properties" : 
+			{
+				"Engine" : "MySQL",
+				"EngineVersion" : "5.6.35",
+				"DBInstanceClass" : "db.t2.medium",
+				"MultiAZ" : "false",
+				"DBInstanceIdentifier" : "csye6225-fall2017",
+				"MasterUsername" : "csye6225master",
+				"MasterUserPassword" : "csye6225password",
+      			"DBName" : { "Ref" : "DBName" },
+      			"AllocatedStorage" : { "Ref" : "DBAllocatedStorage" },
+     			
+      			
+      			
+      			
+      			
+      			"Tags" : [ { "Key" : "Name", "Value" : "My SQL Database" } ]
+   			},
+   			"DeletionPolicy" : "Snapshot"
+			}, 
+		
+		"myDBSubnetGroup" : 
+		{
+			"Type" : "AWS::RDS::DBSubnetGroup",
+         		"Properties" : {
+            			"DBSubnetGroupDescription" : "Subnet group description",
+            			"SubnetIds" : { "Ref" : "subnetGroupId" },
+         			}
+		},  
+
+
+		
+		"DBSecurityGroup": {
+			   "Type": "AWS::RDS::DBSecurityGroup",
+			   "Properties": {
+			   		"EC2VpcId" : { "Ref" : "VpcId" },
+			   		"DBSecurityGroupIngress": 
+					[{
+						"EC2SecurityGroupName": { "Ref": "sgv"}
+					}],
+			   		"GroupDescription": "Frontend Access"
+  					 }
+				}
 	}
 }

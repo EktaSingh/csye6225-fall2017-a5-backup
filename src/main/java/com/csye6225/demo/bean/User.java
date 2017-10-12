@@ -1,6 +1,7 @@
 package com.csye6225.demo.bean;
 
 import javax.persistence.*;
+import java.util.List;
 /*
 <Ekta Singh>, <001258567>, <singh.ek@husky.neu.edu>
 <Karan Bhavsar>, <001225621>, <bhavsar.ka@husky.neu.edu>
@@ -15,6 +16,7 @@ public class User {
     private int userId;
     private String password;
     private String email;
+    private List<String> taskIds;
 
     public User() {
     }
@@ -47,5 +49,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Column(name="taskIds")
+    public List<String> getTaskIds() {
+        return taskIds;
+    }
+
+    public void setTaskIds(List<String> taskIds) {
+        this.taskIds = taskIds;
     }
 }

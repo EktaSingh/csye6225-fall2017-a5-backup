@@ -10,9 +10,9 @@ echo Enter stack name
 read stackName
 
 #get subnet id for user
+subnetID=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=$vpcid" --query "Subnets[0].SubnetId" --output text)
 
-
-aws cloudformation create-stack --stack-name $stackName --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid
+aws cloudformation create-stack --stack-name $stackName --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=subnetGroupId,ParameterValue=$subnetID ParameterKey=DBName,ParameterValue=csye6225
 
 aws ec2 create-security-group --group-name csye6225-webapp --description "my sg" --vpc-id $vpcid
 SECURITY_ID=$(aws ec2 describe-security-groups --group-names csye6225-webapp | grep "GroupId" | awk '{print$2}' | sed -e 's/^"//' -e 's/"$//')

@@ -14,6 +14,11 @@
 		{
 		"Description" : "Subnet group Id to create DB subnet group",
       		"Type": "string",
+		},
+	    "DBName" :
+		{
+		"Description" : "Name of database",
+      		"Type": "string",
 		}
 
 	},
@@ -70,14 +75,9 @@
 				"DBInstanceIdentifier" : "csye6225-fall2017",
 				"MasterUsername" : "csye6225master",
 				"MasterUserPassword" : "csye6225password",
-      			"DBName" : { "Ref" : "DBName" },
-      			"AllocatedStorage" : { "Ref" : "DBAllocatedStorage" },
-     			
-      			
-      			
-      			
-      			
-      			"Tags" : [ { "Key" : "Name", "Value" : "My SQL Database" } ]
+				"DBSubnetGroupName" : { "myDBSubnetGroup" },
+				"PubliclyAccessible" : "false",
+      				"DBName" : { "Ref" : "DBName" },
    			},
    			"DeletionPolicy" : "Snapshot"
 			}, 
@@ -97,11 +97,11 @@
 			   "Type": "AWS::RDS::DBSecurityGroup",
 			   "Properties": {
 			   		"EC2VpcId" : { "Ref" : "VpcId" },
+					"DBSecurityGroupName" : "MyDBSecurityGroup",
 			   		"DBSecurityGroupIngress": 
 					[{
 						"EC2SecurityGroupName": { "Ref": "sgv"}
-					}],
-			   		"GroupDescription": "Frontend Access"
+					}]
   					 }
 				}
 	}

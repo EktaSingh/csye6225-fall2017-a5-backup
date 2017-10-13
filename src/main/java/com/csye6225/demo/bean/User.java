@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 public class User {
 
-    private int userId;
+    private long userId;
     private String password;
     private String email;
     private List<String> taskIds;
@@ -24,7 +24,7 @@ public class User {
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy= GenerationType.AUTO)
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 

@@ -5,6 +5,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.util.List;
+
+/*
+<Ekta Singh>, <001258567>, <singh.ek@husky.neu.edu>
+<Karan Bhavsar>, <001225621>, <bhavsar.ka@husky.neu.edu>
+<Bhavesh Sachdev>, <001280940>, <sachdev.b@husky.neu.edu>
+<Nikita Dulani>, <001280944>, <dulani.n@husky.neu.edu>
+*/
 
 public class Task {
 
@@ -16,6 +24,9 @@ public class Task {
 
     @Column
     private String description;
+
+    @Column
+    List<Attachment> attachmentList;
 
     public String getId() {
         return id;
@@ -33,5 +44,11 @@ public class Task {
         this.description = description;
     }
 
+    public List<Attachment> getAttachmentList() {
+        return attachmentList;
+    }
 
+    public void setAttachmentList(List<Attachment> attachmentList) {
+        this.attachmentList = attachmentList;
+    }
 }

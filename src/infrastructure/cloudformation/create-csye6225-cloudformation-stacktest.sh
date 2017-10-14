@@ -10,9 +10,11 @@ echo Enter stack name
 read stackName
 
 #get subnet id for user
-subnetID=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=$vpcid" --query "Subnets[0].SubnetId" --output text)
+subnetID1=$(aws ec2 describe-subnets --filters "Name=availability-zone, Values=us-east-1b" --query "Subnets[0].SubnetId" --output text)
+subnetID2=$(aws ec2 describe-subnets --filters "Name=availability-zone, Values=us-east-1a" --query "Subnets[0].SubnetId" --output text)
 
-aws cloudformation create-stack --stack-name $stackName --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=subnetGroupId,ParameterValue=$subnetID ParameterKey=DBName,ParameterValue=csye6225
+echo $subnetID1
+echo $subnetID2
 
 aws ec2 create-security-group --group-name csye6225-webapp --description "my sg" --vpc-id $vpcid
 SECURITY_ID=$(aws ec2 describe-security-groups --group-names csye6225-webapp | grep "GroupId" | awk '{print$2}' | sed -e 's/^"//' -e 's/"$//')
@@ -30,3 +32,4 @@ echo "Getting the public IP of the instance"
 PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID | grep PublicIpAddress | awk '{print$2}' | tr -cd '[:alnum:]\n.')
 echo $PUBLIC_IP
 
+aws cloudformation create-stack --stack-name $stackName --template-body file:///home/niki/Desktop/GitAssignments/csye6225-fall2017-a5/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=subnetGroupId1,ParameterValue=$subnetID1 ParameterKey=subnetGroupId2,ParameterValue=$subnetID2 ParameterKey=DBName,ParameterValue=csye6225 ParameterKey=EC2SecurityGroupId,ParameterValue=$SECURITY_ID

@@ -7,18 +7,28 @@
 	    "VpcId":
 		 {
 	        "Description" : "VpcID",
-      		"Type": "string",
+      		"Type": "String"
   		  },
 
-	    "subnetGroupId" :
+	    "subnetGroupId1" :
 		{
 		"Description" : "Subnet group Id to create DB subnet group",
-      		"Type": "string",
+      		"Type": "String"
+		},
+	    "subnetGroupId2" :
+		{
+		"Description" : "Subnet group Id to create DB subnet group",
+      		"Type": "String"
 		},
 	    "DBName" :
 		{
 		"Description" : "Name of database",
-      		"Type": "string",
+      		"Type": "String"
+		},
+	    "EC2SecurityGroupId" :
+		{
+		"Description" : "Ec2 security Group ID",
+      		"Type": "String"
 		}
 
 	},
@@ -46,19 +56,19 @@
 						"IpProtocol": "tcp",
 						"FromPort": "80",
 						"ToPort": "80",
-						"CidrIp": "0.0.0.0"
+						"CidrIp": "10.0.2.15/24"
 					},
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "22",
 						"ToPort": "22",
-						"CidrIp": "0.0.0.0"
+						"CidrIp": "10.0.2.15/24"
 					},
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "443",
 						"ToPort": "443",
-						"CidrIp": "0.0.0.0"
+						"CidrIp": "10.0.2.15/24"
 					}
 				]
 			}
@@ -69,15 +79,16 @@
    			"Properties" : 
 			{
 				"Engine" : "MySQL",
+				"AllocatedStorage" : "100",
 				"EngineVersion" : "5.6.35",
 				"DBInstanceClass" : "db.t2.medium",
 				"MultiAZ" : "false",
 				"DBInstanceIdentifier" : "csye6225-fall2017",
 				"MasterUsername" : "csye6225master",
 				"MasterUserPassword" : "csye6225password",
-				"DBSubnetGroupName" : { "myDBSubnetGroup" },
+				"DBSubnetGroupName" : { "Ref" : "myDBSubnetGroup" },
 				"PubliclyAccessible" : "false",
-      				"DBName" : { "Ref" : "DBName" },
+      				"DBName" : { "Ref" : "DBName" }
    			},
    			"DeletionPolicy" : "Snapshot"
 			}, 
@@ -87,7 +98,7 @@
 			"Type" : "AWS::RDS::DBSubnetGroup",
          		"Properties" : {
             			"DBSubnetGroupDescription" : "Subnet group description",
-            			"SubnetIds" : { "Ref" : "subnetGroupId" },
+            			"SubnetIds" : [{ "Ref" : "subnetGroupId1" } , { "Ref" : "subnetGroupId2" }]
          			}
 		},  
 
@@ -97,12 +108,14 @@
 			   "Type": "AWS::RDS::DBSecurityGroup",
 			   "Properties": {
 			   		"EC2VpcId" : { "Ref" : "VpcId" },
-					"DBSecurityGroupName" : "MyDBSecurityGroup",
 			   		"DBSecurityGroupIngress": 
 					[{
-						"EC2SecurityGroupName": { "Ref": "sgv"}
-					}]
+						"EC2SecurityGroupId": { "Ref": "EC2SecurityGroupId"}
+					}],
+					"GroupDescription": "Frontend Access"
   					 }
 				}
 	}
 }
+
+

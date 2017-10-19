@@ -1,12 +1,11 @@
 package com.csye6225.demo.controllers;
 
-import com.csye6225.demo.bean.Task;
-import com.csye6225.demo.bean.User;
-import com.csye6225.demo.repository.TaskRepository;
-import com.csye6225.demo.repository.UserRepository;
+import com.csye6225.demo.model.Task;
+import com.csye6225.demo.model.UserAccount;
+import com.csye6225.demo.datalayer.TaskRepository;
+import com.csye6225.demo.datalayer.UserRepository;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class TaskController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private HomeController homeController;
+    private UserController homeController;
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -46,12 +45,12 @@ public class TaskController {
             Task t1 = taskRepository.save(task);
             String taskId = t1.getId().toString();
             String auth = httpRequest.getHeader("Authorization");
-            User user = userRepository.findOne(homeController.getUserId(auth));
+            UserAccount userAccount = userRepository.findOne(homeController.getUserId(auth));
 
-            List<String> taskIdList = user.getTaskIds();
+            List<String> taskIdList = userAccount.getTaskIds();
             taskIdList.add(taskId);
 
-            user.setTaskIds(taskIdList);
+            userAccount.setTaskIds(taskIdList);
 
             jsonObject.addProperty("message", "Task Created!");
         }
@@ -90,13 +89,13 @@ public class TaskController {
     public List<Task> getTasks(HttpServletRequest httpRequest) {
 
         String auth = httpRequest.getHeader("Authorization");
-        User user = userRepository.findOne(homeController.getUserId(auth));
+        UserAccount userAccount = userRepository.findOne(homeController.getUserId(auth));
 
         List<Task> result = new ArrayList<>();
 
-        if(user != null){
+        if(userAccount != null){
 
-            List<String> taskIdList = user.getTaskIds();
+            List<String> taskIdList = userAccount.getTaskIds();
             for(String taskId: taskIdList){
                 Task task1 = taskRepository.findOne(taskId);
                 result.add(task1);

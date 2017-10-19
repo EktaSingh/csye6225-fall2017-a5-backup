@@ -1,4 +1,4 @@
-package com.csye6225.demo.bean;
+package com.csye6225.demo.model;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,14 +11,14 @@ import java.util.List;
 
 @Table(name = "user")
 @Entity
-public class User {
+public class UserAccount {
 
     private long userId;
     private String password;
     private String email;
     private List<String> taskIds;
 
-    public User() {
+    public UserAccount() {
     }
 
     @Id

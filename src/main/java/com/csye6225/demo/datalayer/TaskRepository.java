@@ -1,7 +1,7 @@
-package com.csye6225.demo.repository;
+package com.csye6225.demo.datalayer;
 
 
-import com.csye6225.demo.bean.Task;
+import com.csye6225.demo.model.Task;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

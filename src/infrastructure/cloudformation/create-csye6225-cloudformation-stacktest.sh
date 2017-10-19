@@ -9,7 +9,7 @@ vpcid=$(aws ec2 describe-vpcs --query "Vpcs[0].VpcId" --output text)
 echo Enter stack name
 read stackName
 
-#get subnet id for user
+#get subnet id for userAccount
 
 
 aws cloudformation create-stack --stack-name $stackName --template-body file:///home/karan/Desktop/GitAssignments/csye6225-fall2017-a4/src/infrastructure/cloudformation/templateBodytest.json --parameters ParameterKey=VpcId,ParameterValue=$vpcid

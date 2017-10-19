@@ -1,7 +1,7 @@
 package com.csye6225.demo;
 
-import com.csye6225.demo.controllers.HomeController;
-import com.csye6225.demo.repository.UserRepository;
+import com.csye6225.demo.controllers.UserController;
+import com.csye6225.demo.datalayer.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class HomeControllerTest {
+public class UserAccountControllerTest {
 
     private MockMvc mockMvc;
 
@@ -36,14 +36,14 @@ public class HomeControllerTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private HomeController homeController;
+    private UserController userController;
 
     @Before
     public void setUp() throws Exception
     {
         MockitoAnnotations.initMocks(this);
-        homeController = new HomeController(userRepository);
-        mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
+        userController = new UserController(userRepository);
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 
     }
 
@@ -53,10 +53,10 @@ public class HomeControllerTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
         when(mockRequest.getHeader("Authorization")).thenReturn("Basic YUBhLmNvbTph");
-        assertThat(homeController.validateUser(mockRequest).contains("you are logged in."));
+        assertThat(userController.validateUser(mockRequest).contains("you are logged in."));
 
         when(mockRequest.getHeader("Authorization")).thenReturn("Basic YUBhLmNvbTpo");
-        assertThat(homeController.validateUser(mockRequest).contains("you are not authorized!!!"));
+        assertThat(userController.validateUser(mockRequest).contains("you are not authorized!!!"));
 
     }
 

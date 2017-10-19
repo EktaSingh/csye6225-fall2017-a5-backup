@@ -13,7 +13,7 @@ Run it using tomcat8 and add gardle:ROOT.war artifact in deployment tab
 Build it using gradle and deploy on tomcat8
 
 #Instructions to run unit, integration and/or load tests.
-Run HomeControllerTest.java
+Run UserAccountControllerTest.java
 
 #Link to TravisCI build for the project
 https://travis-ci.com/NikitaDulani/csye6225-fall2017

@@ -1,18 +1,19 @@
 package com.csye6225.demo.auth;
 
-import com.csye6225.demo.service.UserAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
+//import org.springframework.session.web.http.HeaderHttpSessionStrategy;
+//import org.springframework.session.web.http.HttpSessionStrategy;
 
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -21,7 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private BasicAuthEntryPoint basicAuthEntryPoint;
 
   @Autowired
-  private UserAccountServiceImpl userAccountService;
+  private UserDetailsService userDetailsService;
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -31,32 +32,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/").permitAll()
+        .antMatchers("/*").permitAll()
         .anyRequest().authenticated()
         .and()
         .httpBasic()
         .authenticationEntryPoint(basicAuthEntryPoint);
      }
 
-    @Bean
+   /* @Bean
       public HttpSessionStrategy httpSessionStrategy() {
         return new HeaderHttpSessionStrategy();
-      }
+      }*/
 
-    @Override
+   /* @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(configAuthentication());
+    }*/
+
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
+
     }
 
-    @Bean
+   /* @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider
                 = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userAccountService);
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
-    }
+    }*/
 
     @Bean
     public PasswordEncoder encoder() {

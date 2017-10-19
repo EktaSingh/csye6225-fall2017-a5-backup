@@ -4,12 +4,15 @@ import com.csye6225.demo.datalayer.UserRepository;
 import com.csye6225.demo.model.UserAccount;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Repository;
 import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
 import java.util.Iterator;
 
+@Repository
 public class UserAccountDao {
 
     @Autowired

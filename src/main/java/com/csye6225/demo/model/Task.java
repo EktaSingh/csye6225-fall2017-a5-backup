@@ -14,6 +14,7 @@ import java.util.List;
 <Bhavesh Sachdev>, <001280940>, <sachdev.b@husky.neu.edu>
 <Nikita Dulani>, <001280944>, <dulani.n@husky.neu.edu>
 */
+/*
 
 @Entity
 public class Task {
@@ -54,3 +55,4 @@ public class Task {
         this.attachmentList = attachmentList;
     }
 }
+*/

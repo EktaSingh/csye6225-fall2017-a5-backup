@@ -41,15 +41,19 @@ dependencies {
     compile('org.springframework.boot:spring-boot-actuator-docs')
     compile('org.springframework.boot:spring-boot-starter-mail')
     compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.session:spring-session')
+    //compile('org.springframework.session:spring-session')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-security')
+    complie('javax.persistence:persistence-api')
+    //compile('org.springframework.boot:spring-boot-starter-tomcat')
 
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
     compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.210'
 
     compile('com.h2database:h2:+')
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat
+    //compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.2.1.RELEASE'
 
     
     compile('org.apache.commons:commons-lang3:+')

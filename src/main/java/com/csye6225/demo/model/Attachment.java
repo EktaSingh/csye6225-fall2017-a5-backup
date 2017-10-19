@@ -13,6 +13,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+/*
 
 @Entity
 public class Attachment {
@@ -41,3 +42,4 @@ public class Attachment {
         this.url = url;
     }
 }
+*/

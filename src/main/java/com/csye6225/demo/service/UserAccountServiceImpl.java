@@ -21,6 +21,7 @@ public class UserAccountServiceImpl implements UserAccountService, UserDetailsSe
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private UserAccountDao userAccountDao;
 
     @Override
@@ -48,10 +49,19 @@ public class UserAccountServiceImpl implements UserAccountService, UserDetailsSe
 
         UserAccount userRecord = userRepository.findByEmail(username);
 
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("User");
+        if(userRecord != null)
+        {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("User");
 
-        UserDetails springUserRecord = new User(userRecord.getEmail(), userRecord.getPassword(), Arrays.asList(grantedAuthority));
+            UserDetails springUserRecord = new User(userRecord.getEmail(), userRecord.getPassword(), Arrays.asList(grantedAuthority));
 
-        return springUserRecord;
+            return springUserRecord;
+
+        }
+        else
+        {
+            return null;
+        }
+
     }
 }

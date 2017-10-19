@@ -29,6 +29,11 @@
 		{
 		"Description" : "Ec2 security Group ID",
       		"Type": "String"
+		},
+	    "bucketName" :
+		{
+		"Description" : "S3 bucket name",
+      		"Type": "String"
 		}
 
 	},
@@ -114,8 +119,14 @@
 					}],
 					"GroupDescription": "Frontend Access"
   					 }
-				}
+				},
+		"myS3Bucket" : 
+			{
+        		"Type" : "AWS::S3::Bucket",
+			"Properties" : { "BucketName" : { "Ref": "bucketName"} }
+    			}
 	}
 }
+
 
 

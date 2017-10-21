@@ -27,7 +27,7 @@ public class Task implements Persistable<String> {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     List<Attachment> attachmentList;
 
     @ManyToOne

@@ -171,8 +171,9 @@ public class TaskController {
                 attachments.add(attachment);
 
                 task.setAttachmentList(attachments);
-                taskRepository.save(task);
+
                 attachmentRepository.save(attachment);
+                taskRepository.save(task);
 
                 jsonObject.addProperty("id", attachment.getId());
                 jsonObject.addProperty("url", attachment.getFilePath());

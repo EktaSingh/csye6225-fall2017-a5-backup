@@ -1,7 +1,7 @@
-package com.csye6225.demo.bean;
+package com.csye6225.demo.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 /*
 <Ekta Singh>, <001258567>, <singh.ek@husky.neu.edu>
 <Karan Bhavsar>, <001225621>, <bhavsar.ka@husky.neu.edu>
@@ -9,22 +9,25 @@ import java.util.List;
 <Nikita Dulani>, <001280944>, <dulani.n@husky.neu.edu>
 */
 
-@Table(name = "user")
 @Entity
-public class User {
-
-    private int userId;
-    private String password;
-    private String email;
-    private List<String> taskIds;
-
-    public User() {
-    }
+@Table(name = "user")
+public class UserAccount {
 
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy= GenerationType.AUTO)
-    public int getUserId() {
+    private long userId;
+
+    @Column
+    private String password;
+
+    @Column(unique = true)
+    private String email;
+
+    public UserAccount() {
+    }
+
+    public long getUserId() {
         return userId;
     }
 
@@ -32,8 +35,6 @@ public class User {
         this.userId = userId;
     }
 
-
-    @Column(name="password")
     public String getPassword() {
         return password;
     }
@@ -42,7 +43,6 @@ public class User {
         this.password = password;
     }
 
-    @Column(name="email")
     public String getEmail() {
         return email;
     }
@@ -51,12 +51,4 @@ public class User {
         this.email = email;
     }
 
-    @Column(name="taskIds")
-    public List<String> getTaskIds() {
-        return taskIds;
-    }
-
-    public void setTaskIds(List<String> taskIds) {
-        this.taskIds = taskIds;
-    }
 }

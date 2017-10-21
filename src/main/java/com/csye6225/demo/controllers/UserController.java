@@ -1,7 +1,8 @@
 package com.csye6225.demo.controllers;
 
-import com.csye6225.demo.bean.User;
-import com.csye6225.demo.repository.UserRepository;
+import com.csye6225.demo.model.UserAccount;
+import com.csye6225.demo.datalayer.UserRepository;
+import com.csye6225.demo.service.UserAccountService;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +28,18 @@ import java.util.Iterator;
 */
 
 @Controller
-public class HomeController {
+public class UserController {
 
-    private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private final UserRepository userRepository;
 
     @Autowired
-    public  HomeController(UserRepository userRepository){
+    private UserAccountService userAccountService;
+
+    @Autowired
+    public UserController(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
@@ -55,19 +59,10 @@ public class HomeController {
 
         String auth = httpRequest.getHeader("Authorization");
 
-        JsonObject jsonObject = new JsonObject();
-        boolean validUser = isUserAuthenticated(auth);
-
-        if (validUser) {
-            jsonObject.addProperty("message", "you are logged in. current time is " + new Date().toString());
-        } else {
-            jsonObject.addProperty("message", "you are not authorized!!!");
-        }
-
-        return jsonObject.toString();
+        return userAccountService.validateUser(auth);
     }
 
-    private boolean isUserAuthenticated(String authString) {
+    public long getUserId(String authString) {
 
         String decodedAuth = "";
         // Header is in the format "Basic 5tyc0uiDat4"
@@ -90,29 +85,32 @@ public class HomeController {
 
         JsonObject jsonObject = new JsonObject();
         boolean validUser = false;
+        long result=0;
 
         if(userRepository.findAll() == null){
 
-            User user = new User();
+            UserAccount userAccount = new UserAccount();
             String bcyrptPassword = BCrypt.hashpw("a", BCrypt.gensalt());
-            user.setPassword(bcyrptPassword);
-            user.setEmail("a@a.com");
-            user.setUserId(1);
-            userRepository.save(user);
+            userAccount.setPassword(bcyrptPassword);
+            userAccount.setEmail("a@a.com");
+            userAccount.setUserId(1);
+            userRepository.save(userAccount);
 
-            if (user.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, user.getPassword())) {
+            if (userAccount.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, userAccount.getPassword())) {
+                //result = userAccount.getUserId();
                 validUser = true;
             }
 
         }else{
 
-            Iterable<User> users = userRepository.findAll();
+            Iterable<UserAccount> users = userRepository.findAll();
             Iterator iterator = users.iterator();
 
             while (iterator.hasNext()) {
-                User user = (User) iterator.next();
+                UserAccount userAccount = (UserAccount) iterator.next();
 
-                if (user.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, user.getPassword())) {
+                if (userAccount.getEmail().equalsIgnoreCase(email) && BCrypt.checkpw(password, userAccount.getPassword())) {
+                    result = userAccount.getUserId();
                     validUser = true;
                     break;
                 }
@@ -120,16 +118,32 @@ public class HomeController {
         }
 
 
-        return validUser;
+        return result;
+    }
+
+    public UserAccount getUser(String email)
+    {
+        Iterable<UserAccount> users = userRepository.findAll();
+        Iterator iterator = users.iterator();
+
+        while (iterator.hasNext()) {
+            UserAccount userAccount = (UserAccount) iterator.next();
+
+            if (userAccount.getEmail().equalsIgnoreCase(email)) {
+                return userAccount;
+            }
+        }
+
+        return null;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public String registerUser(@RequestBody User user) {
+    public String registerUser(@RequestBody UserAccount userAccount) {
 
-        String bcyrptPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(bcyrptPassword);
-        userRepository.save(user);
+        String bcyrptPassword = BCrypt.hashpw(userAccount.getPassword(), BCrypt.gensalt());
+        userAccount.setPassword(bcyrptPassword);
+        userRepository.save(userAccount);
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("message", "authorized for /testPost");
         return jsonObject.toString();

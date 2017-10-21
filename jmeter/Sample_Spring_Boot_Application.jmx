@@ -49,7 +49,7 @@
           <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
-                <stringProp name="Authorization.url">http://localhost:8080</stringProp>
+                <stringProp name="Authorization.file">http://localhost:8080</stringProp>
                 <stringProp name="Authorization.username">userAccount</stringProp>
                 <stringProp name="Authorization.password">password</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>

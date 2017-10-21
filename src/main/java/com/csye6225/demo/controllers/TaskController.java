@@ -112,5 +112,27 @@ public class TaskController {
 
         return jsonObject.toString();
     }
+
+    @RequestMapping(value = "/tasks/{id}/attachments", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public String getAttachments(HttpServletRequest httpRequest,  HttpServletResponse response,
+                             @RequestBody Task task) {
+
+        JsonObject jsonObject = new JsonObject();
+        String auth = httpRequest.getHeader("Authorization");
+        UserAccount userAccount = userRepository.findOne(userController.getUserId(auth));
+
+        if(userAccount != null) {
+            task.setUserAccount(userAccount);
+            Task savedTask = taskRepository.save(task);
+            jsonObject.addProperty("message", "Task Created!");
+        }
+        else {
+            jsonObject.addProperty("message", "Not authorized");
+            response.setStatus(403);
+        }
+
+        return jsonObject.toString();
+    }
 }
 

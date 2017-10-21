@@ -16,7 +16,7 @@ Build it using gradle and deploy on tomcat8
 Run HomeControllerTest.java
 
 #Link to TravisCI build for the project
-https://travis-ci.com/NikitaDulani/csye6225-fall2017
+https://travis-ci.com/NikitaDulani/csye6225-fall2017 
 
 
 

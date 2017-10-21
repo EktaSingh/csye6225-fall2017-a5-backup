@@ -70,7 +70,6 @@ public class TaskController {
             if (exists) {
                 Task task1 = taskRepository.findOne(id);
                 task1.setDescription(task.getDescription());
-                task1.setUserAccount(userAccount);
                 taskRepository.save(task1);
                 jsonObject.addProperty("message", "Task Updated!");
             } else {
@@ -85,25 +84,33 @@ public class TaskController {
         return jsonObject.toString();
     }
 
-    /*
+
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public String deleteTask(@PathVariable(value = "id")String id) {
+    public String deleteTask(HttpServletRequest httpRequest, HttpServletResponse response,@PathVariable(value = "id")String id) {
 
-        JsonObject jsonObject = new JsonObject();
-        boolean exists = taskRepository.exists(id);
+       JsonObject jsonObject = new JsonObject();
+       boolean exists = taskRepository.exists(id);
 
-        if(exists){
-            taskRepository.delete(id);
-            jsonObject.addProperty("message", "Task Deleted!");
-        }
-        else
-        {
-            jsonObject.addProperty("message", "Task id doesn't exist");
-        }
+       String auth = httpRequest.getHeader("Authorization");
+       UserAccount userAccount = userRepository.findOne(userController.getUserId(auth));
+
+       if(userAccount != null) {
+           if(exists){
+               taskRepository.delete(id);
+               jsonObject.addProperty("message", "Task Deleted!");
+           }
+           else
+           {
+               jsonObject.addProperty("message", "Task id doesn't exist");
+           }
+       }
+        else {
+        jsonObject.addProperty("message", "Not authorized");
+        response.setStatus(403);
+    }
 
         return jsonObject.toString();
     }
-*/
 }
 

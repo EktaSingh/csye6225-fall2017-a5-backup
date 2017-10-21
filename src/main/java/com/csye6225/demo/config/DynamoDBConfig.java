@@ -1,3 +1,4 @@
+/*
 package com.csye6225.demo.config;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -39,3 +40,4 @@ public class DynamoDBConfig {
                 amazonAWSAccessKey, amazonAWSSecretKey);
     }
 }
+*/

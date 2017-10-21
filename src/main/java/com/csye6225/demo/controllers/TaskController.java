@@ -1,5 +1,5 @@
 package com.csye6225.demo.controllers;
-/*
+
 import com.csye6225.demo.model.Task;
 import com.csye6225.demo.model.UserAccount;
 import com.csye6225.demo.datalayer.TaskRepository;
@@ -10,8 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;*/
+import java.util.Set;
 
 /*
 <Ekta Singh>, <001258567>, <singh.ek@husky.neu.edu>
@@ -19,7 +18,7 @@ import java.util.List;*/
 <Bhavesh Sachdev>, <001280940>, <sachdev.b@husky.neu.edu>
 <Nikita Dulani>, <001280944>, <dulani.n@husky.neu.edu>
 */
-/*
+
 
 @Controller
 public class TaskController {
@@ -29,14 +28,26 @@ public class TaskController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserController homeController;
+    private UserController userController;
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public String createTask(HttpServletRequest httpRequest,
                              @RequestBody Task task) {
 
-        String validateUser = homeController.validateUser(httpRequest);
+        String auth = httpRequest.getHeader("Authorization");
+
+        JsonObject jsonObject = new JsonObject();
+
+        Task savedTask = taskRepository.save(task);
+
+        UserAccount userAccount = userRepository.findOne(userController.getUserId(auth));
+        savedTask.setUserId(userAccount.getUserId());
+
+        jsonObject.addProperty("message", "Task Created!");
+        return jsonObject.toString();
+
+       /* String validateUser = homeController.validateUser(httpRequest);
         boolean valid = validateUser.contains("you are logged in.");
 
         JsonObject jsonObject = new JsonObject();
@@ -44,14 +55,14 @@ public class TaskController {
         if(valid)
         {
             Task t1 = taskRepository.save(task);
-            String taskId = t1.getId().toString();
+            String taskId = t1.getTaskId().toString();
             String auth = httpRequest.getHeader("Authorization");
             UserAccount userAccount = userRepository.findOne(homeController.getUserId(auth));
 
-            List<String> taskIdList = userAccount.getTaskIds();
+            List<Task> taskIdList = userAccount.getTasks();
             taskIdList.add(taskId);
 
-            userAccount.setTaskIds(taskIdList);
+            userAccount.setTasks(taskIdList);
 
             jsonObject.addProperty("message", "Task Created!");
         }
@@ -59,12 +70,12 @@ public class TaskController {
         {
             jsonObject.addProperty("message", "Not authorized");
         }
+*/
 
 
-        return jsonObject.toString();
     }
 
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
+   /* @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
     @ResponseBody
     public String updateTask(@RequestBody Task task, @PathVariable(value = "id")String id) {
 
@@ -96,7 +107,7 @@ public class TaskController {
 
         if(userAccount != null){
 
-            List<String> taskIdList = userAccount.getTaskIds();
+            List<String> taskIdList = userAccount.getTasks();
             for(String taskId: taskIdList){
                 Task task1 = taskRepository.findOne(taskId);
                 result.add(task1);
@@ -124,7 +135,7 @@ public class TaskController {
 
         return jsonObject.toString();
     }
-
+*/
 
 }
-*/
+

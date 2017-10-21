@@ -24,9 +24,6 @@ public class UserAccount {
     @Column(unique = true)
     private String email;
 
-    /*@OneToMany
-    private Set<String> taskIds;*/
-
     public UserAccount() {
     }
 
@@ -54,11 +51,4 @@ public class UserAccount {
         this.email = email;
     }
 
-    /*public Set<String> getTaskIds() {
-        return taskIds;
-    }
-
-    public void setTaskIds(Set<String> taskIds) {
-        this.taskIds = taskIds;
-    }*/
 }

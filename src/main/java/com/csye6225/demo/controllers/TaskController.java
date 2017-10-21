@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -32,91 +34,58 @@ public class TaskController {
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public String createTask(HttpServletRequest httpRequest,
+    public String createTask(HttpServletRequest httpRequest,  HttpServletResponse response,
                              @RequestBody Task task) {
 
+        JsonObject jsonObject = new JsonObject();
         String auth = httpRequest.getHeader("Authorization");
-
-        JsonObject jsonObject = new JsonObject();
-
-        Task savedTask = taskRepository.save(task);
-
         UserAccount userAccount = userRepository.findOne(userController.getUserId(auth));
-        savedTask.setUserId(userAccount.getUserId());
 
-        jsonObject.addProperty("message", "Task Created!");
-        return jsonObject.toString();
-
-       /* String validateUser = homeController.validateUser(httpRequest);
-        boolean valid = validateUser.contains("you are logged in.");
-
-        JsonObject jsonObject = new JsonObject();
-
-        if(valid)
-        {
-            Task t1 = taskRepository.save(task);
-            String taskId = t1.getTaskId().toString();
-            String auth = httpRequest.getHeader("Authorization");
-            UserAccount userAccount = userRepository.findOne(homeController.getUserId(auth));
-
-            List<Task> taskIdList = userAccount.getTasks();
-            taskIdList.add(taskId);
-
-            userAccount.setTasks(taskIdList);
-
+        if(userAccount != null) {
+            task.setUserAccount(userAccount);
+            Task savedTask = taskRepository.save(task);
             jsonObject.addProperty("message", "Task Created!");
         }
-        else
-        {
+        else {
             jsonObject.addProperty("message", "Not authorized");
+            response.setStatus(403);
         }
-*/
 
-
+        return jsonObject.toString();
     }
 
-   /* @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
+
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
     @ResponseBody
-    public String updateTask(@RequestBody Task task, @PathVariable(value = "id")String id) {
+    public String updateTask(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody Task task, @PathVariable(value = "id")String id) {
 
         JsonObject jsonObject = new JsonObject();
         boolean exists = taskRepository.exists(id);
 
-        if(exists){
-            Task task1 = taskRepository.findOne(id);
-            task1.setDescription(task.getDescription());
-            taskRepository.save(task1);
-            jsonObject.addProperty("message", "Task Updated!");
+        String auth = httpRequest.getHeader("Authorization");
+        UserAccount userAccount = userRepository.findOne(userController.getUserId(auth));
+
+        if(userAccount != null) {
+
+            if (exists) {
+                Task task1 = taskRepository.findOne(id);
+                task1.setDescription(task.getDescription());
+                task1.setUserAccount(userAccount);
+                taskRepository.save(task1);
+                jsonObject.addProperty("message", "Task Updated!");
+            } else {
+                jsonObject.addProperty("message", "Task id doesn't exist");
+            }
         }
-        else
-        {
-            jsonObject.addProperty("message", "Task id doesn't exist");
+        else {
+            jsonObject.addProperty("message", "Not authorized");
+            response.setStatus(403);
         }
 
         return jsonObject.toString();
     }
 
-    @RequestMapping(value = "/tasks", method = RequestMethod.GET, produces = "application/json")
-    @ResponseBody
-    public List<Task> getTasks(HttpServletRequest httpRequest) {
-
-        String auth = httpRequest.getHeader("Authorization");
-        UserAccount userAccount = userRepository.findOne(homeController.getUserId(auth));
-
-        List<Task> result = new ArrayList<>();
-
-        if(userAccount != null){
-
-            List<String> taskIdList = userAccount.getTasks();
-            for(String taskId: taskIdList){
-                Task task1 = taskRepository.findOne(taskId);
-                result.add(task1);
-            }
-        }
-
-        return result;
-    }
-
+    /*
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public String deleteTask(@PathVariable(value = "id")String id) {
@@ -136,6 +105,5 @@ public class TaskController {
         return jsonObject.toString();
     }
 */
-
 }
 

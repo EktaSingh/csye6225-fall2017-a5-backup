@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,7 +131,7 @@ public class TaskController {
     @RequestMapping(value = "/tasks/{id}/attachments", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String saveAttachments(HttpServletRequest httpRequest,  HttpServletResponse response,
+    public String saveAttachments(HttpServletRequest httpRequest, HttpServletResponse response,
                                   @PathVariable(value = "id")String id,
                                   @RequestParam("file") MultipartFile file) {
 
@@ -158,8 +159,10 @@ public class TaskController {
 
                 Attachment attachment = new Attachment();
 
-                attachment.setFilePath(path.toString());
-                attachment.setTask(task);
+                attachment.setMultipartFile(file);
+               // attachment.setTask(task);
+
+                Attachment savedAttachment = attachmentRepository.save(attachment);
 
                 List<Attachment> attachments = task.getAttachmentList();
 
@@ -168,15 +171,14 @@ public class TaskController {
                     attachments = new ArrayList<>();
                 }
 
-                attachments.add(attachment);
+                attachments.add(savedAttachment);
 
                 task.setAttachmentList(attachments);
 
-                attachmentRepository.save(attachment);
                 taskRepository.save(task);
 
                 jsonObject.addProperty("id", attachment.getId());
-                jsonObject.addProperty("url", attachment.getFilePath());
+                jsonObject.addProperty("url", attachment.getMultipartFile().toString());
 
             } catch (IOException e) {
                 e.printStackTrace();

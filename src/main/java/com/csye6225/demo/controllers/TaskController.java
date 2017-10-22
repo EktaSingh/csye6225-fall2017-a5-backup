@@ -163,7 +163,6 @@ public class TaskController {
 
                     attachment.setMultipartFile(file);
                    // attachment.setTask(task);
-
                     Attachment savedAttachment = attachmentRepository.save(attachment);
 /*
                     List<Attachment> attachments = task.getAttachmentList();

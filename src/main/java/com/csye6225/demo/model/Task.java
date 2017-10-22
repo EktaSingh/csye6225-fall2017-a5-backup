@@ -16,8 +16,6 @@ import java.util.List;
 @Entity
 public class Task implements Persistable<String> {
 
-    private static final long serialVersionUID = 2535090450811888936L;
-
     @Id
     @Column(unique = true)
     @GeneratedValue(generator = "system-uuid")
@@ -27,8 +25,8 @@ public class Task implements Persistable<String> {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.ALL})
-    List<Attachment> attachmentList;
+   /* @OneToMany(mappedBy = "id", cascade = {CascadeType.ALL})
+    List<Attachment> attachmentList;*/
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
@@ -50,13 +48,13 @@ public class Task implements Persistable<String> {
         this.description = description;
     }
 
-    public List<Attachment> getAttachmentList() {
+    /*public List<Attachment> getAttachmentList() {
         return attachmentList;
     }
 
     public void setAttachmentList(List<Attachment> attachmentList) {
         this.attachmentList = attachmentList;
-    }
+    }*/
 
     public UserAccount getUserAccount() {
         return userAccount;

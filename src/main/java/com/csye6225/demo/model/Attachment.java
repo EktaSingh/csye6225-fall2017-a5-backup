@@ -26,7 +26,7 @@ public class Attachment implements Persistable<String> {
     @Transient
     private MultipartFile multipartFile;
 
-   /* @ManyToOne(cascade = CascadeType.ALL)
+   /* @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="taskId", nullable = false)
     private Task task;
 */

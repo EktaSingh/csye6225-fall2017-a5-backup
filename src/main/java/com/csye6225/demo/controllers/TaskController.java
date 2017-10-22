@@ -157,28 +157,37 @@ public class TaskController {
 
                 Task task = taskRepository.findOne(id);
 
-                Attachment attachment = new Attachment();
-
-                attachment.setMultipartFile(file);
-               // attachment.setTask(task);
-
-                Attachment savedAttachment = attachmentRepository.save(attachment);
-
-                List<Attachment> attachments = task.getAttachmentList();
-
-                if(attachments == null)
+                if(task != null)
                 {
-                    attachments = new ArrayList<>();
+                    Attachment attachment = new Attachment();
+
+                    attachment.setMultipartFile(file);
+                   // attachment.setTask(task);
+
+                    Attachment savedAttachment = attachmentRepository.save(attachment);
+/*
+                    List<Attachment> attachments = task.getAttachmentList();
+
+                    if(attachments == null)
+                    {
+                        attachments = new ArrayList<>();
+                    }
+
+                    attachments.add(savedAttachment);
+
+                    task.setAttachmentList(attachments);
+
+                    taskRepository.save(task);*/
+
+                    jsonObject.addProperty("id", attachment.getId());
+                    jsonObject.addProperty("url", attachment.getMultipartFile().toString());
                 }
 
-                attachments.add(savedAttachment);
+                else
+                {
+                    jsonObject.addProperty("message", "Task with given id doesn't exist");
+                }
 
-                task.setAttachmentList(attachments);
-
-                taskRepository.save(task);
-
-                jsonObject.addProperty("id", attachment.getId());
-                jsonObject.addProperty("url", attachment.getMultipartFile().toString());
 
             } catch (IOException e) {
                 e.printStackTrace();
